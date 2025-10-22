@@ -1,0 +1,24 @@
+[MASTER]
+# Usar el plugin de Django para pylint
+load-plugins=pylint_django
+
+# Archivos o directorios a ignorar
+ignore=migrations,__pycache__,.git,venv,env
+
+[MESSAGES CONTROL]
+# Deshabilitar algunos mensajes comunes en Django
+disable=missing-docstring,
+        invalid-name,
+        too-few-public-methods,
+        no-member
+
+[FORMAT]
+# Longitud máxima de línea
+max-line-length=120
+
+[DESIGN]
+# Número máximo de argumentos para funciones
+max-args=7
+
+# Número máximo de atributos para clases
+max-attributes=10
