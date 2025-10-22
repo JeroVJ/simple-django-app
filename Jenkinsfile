@@ -10,7 +10,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Descargando código desde el repositorio...'
-                // Descargar el proyecto desde tu repositorio propio
                 checkout scm
             }
         }
@@ -19,9 +18,9 @@ pipeline {
             steps {
                 echo 'Configurando entorno Python...'
                 sh '''
-                    python3 -m pip install --upgrade pip
-                    pip install -r requirements.txt
-                    pip install pylint
+                    python3 -m pip install --upgrade pip --break-system-packages
+                    pip install -r requirements.txt --break-system-packages
+                    pip install pylint --break-system-packages
                 '''
             }
         }
@@ -30,8 +29,6 @@ pipeline {
             steps {
                 echo 'Ejecutando análisis con pylint...'
                 script {
-                    // Ejecutar pylint sobre todos los archivos .py del proyecto
-                    // --exit-zero evita que falle el build por warnings de pylint
                     sh '''
                         pylint --exit-zero --output-format=text \
                                --reports=y \
@@ -45,7 +42,6 @@ pipeline {
             }
             post {
                 always {
-                    // Archivar el reporte de pylint
                     archiveArtifacts artifacts: 'pylint-report.txt', allowEmptyArchive: true
                 }
             }
@@ -76,16 +72,12 @@ pipeline {
                 echo 'Desplegando aplicación Django...'
                 sh '''
                     cd ${APP_DIR}
-                    # Detener proceso anterior si existe
                     pkill -f "python3 manage.py runserver" || true
                     
-                    # Iniciar servidor en background
                     nohup python3 manage.py runserver 0.0.0.0:8000 > django.log 2>&1 &
                     
-                    # Esperar a que el servidor inicie
                     sleep 5
                     
-                    # Verificar que el servidor está corriendo
                     if curl -f http://localhost:8000/ ; then
                         echo "Aplicación desplegada exitosamente"
                     else
