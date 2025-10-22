@@ -18,7 +18,6 @@ pipeline {
             steps {
                 echo 'Configurando entorno Python...'
                 sh '''
-                    python3 -m pip install --upgrade pip --break-system-packages
                     pip install -r requirements.txt --break-system-packages
                     pip install pylint --break-system-packages
                 '''
